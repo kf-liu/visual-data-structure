@@ -1,6 +1,7 @@
 import { Link, Outlet, history } from 'ice';
-import About from '@/components/About';
 import { Layout as AntLayout, Menu } from 'antd';
+import About from '@/components/About';
+import Logo from '@/components/Logo';
 import styles from './layout.module.less';
 
 const { Header, Footer, Sider, Content } = AntLayout;
@@ -39,9 +40,7 @@ export default function Layout() {
             >
                 <div className={styles.title}>
                     <Link to="/">
-                        数据结构可视化
-                        <br />
-                        Data Structure Visualization
+                        <Logo className={styles.title} />
                     </Link>
                 </div>
                 <Menu

@@ -1,23 +1,32 @@
-import { Link } from 'ice';
+import { useState } from 'react';
+import { history } from 'ice';
+import { Button } from 'antd';
 import About from '@/components/About';
-import logo from '@/assets/logo.png';
+import Logo from '@/components/Logo';
 import styles from './index.module.css';
 
 export default function Home() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const onClickStart = () => {
+    history?.push('/main/sort/bubble');
+    setLoading(true);
+  };
+
   return (
     <div className={styles.app}>
       <header className={styles.appHeader}>
-        <img src={logo} alt="logo" className={styles.logo} />
-        <p className={styles.title}>
-          数据结构可视化
-          <br />
-          Data Structure Visualization
-        </p>
+        <img src="https://avatars.githubusercontent.com/u/41723241?v=4" alt="logo" className={styles.logo} />
+        <Logo className={styles.title} />
       </header>
       <div className={styles.body}>
-        <Link to="/main/sort/bubble" className={styles.button}>
+        <Button
+          className={styles.start}
+          type="primary"
+          loading={loading}
+          onClick={onClickStart}
+        >
           START
-        </Link>
+        </Button>
         <About />
       </div>
     </div >
