@@ -19,8 +19,15 @@ p {
   text-align: center;
 }
 
-button {
+a {
+  text-decoration: none;
+  color: #3178f6;
+}
+
+button,
+.button {
   outline: none;
+  text-align: center;
   border: none;
   border-radius: 8px;
   padding: 10px 35px;
@@ -57,7 +64,7 @@ button {
 .body {
   display: flex;
   flex-direction: column;
-  
+
   margin: 20px 0 10px;
   font-size: 0.9rem;
 }
