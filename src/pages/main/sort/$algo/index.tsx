@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, history } from "ice";
 import { List, Typography, Input, Tag, Row, Col } from "antd";
 import { Column } from '@ant-design/plots';
-import { ALGO, ALGO_CONFIG, RUNNER_CONFIG } from './config';
+import { ALGO, ALGO_CONFIG } from './config';
+import { RUNNER_CONFIG } from '../../config';
 import { CHART_COLOR_COMMON, CHART_COLOR_PRIMARY } from "@/utils";
 
 const { Text } = Typography;
@@ -16,10 +17,15 @@ export default () => {
     }
 
     const [flags, setFlags] = useState<any>({});
-    const [dataNumbers, setDataNumbers] = useState<any[]>([]);
+    const [numberRange, setNumberRange] = useState<any>({
+        min: 0,
+        max: 0,
+        range: 0,
+    });
+    const [chartNumbers, setChartNumbers] = useState<any[]>([]);
     const [inputNumbers, setInputNumbers] = useState<string>('');
     const coloumnConfig = {
-        data: dataNumbers,
+        data: chartNumbers,
         xField: 'xField',
         yField: 'yField',
         label: {
@@ -37,7 +43,7 @@ export default () => {
             }
             return CHART_COLOR_COMMON[0];
         },
-        animation: false,
+        // animation: false,
     };
 
     const onFlagChange = (flag) => {
@@ -48,10 +54,7 @@ export default () => {
     };
 
     const handleSort = (v: number[]) => {
-        setDataNumbers(v?.map((n: number, i: number) => ({
-            xField: i,
-            yField: n,
-        })));
+        setChartNumbers(v);
     };
 
     const onNumberChange = (v) => {
@@ -60,9 +63,22 @@ export default () => {
 
     const onNumbersSearch = (v) => {
         setInputNumbers(v);
-        const newValue = v?.split(',')?.map(v => Number(v));
-        handleSort(newValue);
-        config.run(newValue, handleSort, onFlagChange, RUNNER_CONFIG);
+        const newValue = v?.split(',')
+        const newChartData = newValue?.map((n: number, i: number) => ({
+            index: ~~i,
+            value: ~~n,
+            xField: ~~i,
+            yField: ~~n,
+        }));
+        handleSort(newChartData);
+        const min = Math.min(...newValue);
+        const max = Math.max(...newValue);
+        setNumberRange({
+            min,
+            max,
+            range: (max - min) * 1.1,
+        });
+        config.run(newChartData, handleSort, onFlagChange, RUNNER_CONFIG);
     };
 
     useEffect(() => {
@@ -74,19 +90,48 @@ export default () => {
         onNumbersSearch(initNumbers.join(','))
     }, [])
 
+    const color = ({ xField }) => {
+        if (xField === flags.i) {
+            return CHART_COLOR_PRIMARY[0];
+        } else if (xField === flags.j) {
+            return CHART_COLOR_PRIMARY[1];
+        }
+        return CHART_COLOR_COMMON[0];
+    };
+
     return (
         <div>
             <Column {...coloumnConfig} />
+            {/* <Row justify="space-between" align="bottom">
+                {dataNumbers?.map((data: any, index: number) => (
+                    <Col
+                        span={24 / dataNumbers.length}
+                        key={index}
+                        style={{
+                            height: `${(data.yField - numberRange.min) / numberRange.range * 400}px`,
+                            width: `calc(100% / ${dataNumbers.length}`,
+                        }}
+                    >
+                        <div
+                            style={{
+                                width: '80%',
+                                height: '100%',
+                                background: color(data),
+                            }}
+                        />
+                    </Col>
+                ))}
+            </Row> */}
             {Object.keys(flags)?.map((key: string, flagIndex: number) => (
                 <Row
                     key={flagIndex}
-                    style={{ margin: '10px 0 30px 30px', textAlign: 'center' }}
+                    style={{ margin: '10px 0 30px 0', textAlign: 'center' }}
                 >
-                    {dataNumbers?.map((_data: any, dataIndex: number) => (
+                    {chartNumbers?.map((_data: any, dataIndex: number) => (
                         <Col
-                            span={24 / dataNumbers.length}
+                            span={24 / chartNumbers.length}
                             key={dataIndex}
-                            style={{ width: `calc(100% / ${dataNumbers.length}` }}
+                            style={{ width: `calc(100% / ${chartNumbers.length}` }}
                         >
                             {flags[key] === dataIndex &&
                                 <Text
@@ -94,7 +139,7 @@ export default () => {
                                     code
                                     style={{ width: 'max-content', display: 'block', textAlign: 'center', margin: 'auto' }}
                                 >
-                                    {key}({flags[key]})
+                                    ⬆{key}({flags[key]})
                                 </Text>
                             }
                         </Col>

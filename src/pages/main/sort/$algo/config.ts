@@ -4,7 +4,7 @@ export const ALGO = ['bubble', 'selection']
 
 let current = 0;
 
-const runBubble = async (arr: number[], setArr, onFlagChange, config) => {
+const runSelection = async (arr: any[], setArr, onFlagChange, config) => {
     current = current + 1;
     const thisCurrent = current;
     const { delay } = config;
@@ -19,7 +19,7 @@ const runBubble = async (arr: number[], setArr, onFlagChange, config) => {
         for (var j = i + 1; j < len; j++) {
             if (thisCurrent !== current) return;
             onFlagChange({ j });
-            if (arr[j] < arr[minIndex]) {     // 寻找最小的数
+            if (arr[j].value < arr[minIndex]) {     // 寻找最小的数
                 minIndex = j;
                 if (thisCurrent !== current) return;
                 onFlagChange({ minIndex: j })            // 将最小数的索引保存
@@ -38,9 +38,9 @@ const runBubble = async (arr: number[], setArr, onFlagChange, config) => {
 }
 
 export const ALGO_CONFIG = {
-    bubble: {
-        algo: 'bubble',
-        name: '冒泡',
+    selection: {
+        algo: 'selection',
+        name: '选择',
         code: `function selectionSort(arr) {
     var len = arr.length;
     var minIndex, temp;
@@ -57,10 +57,6 @@ export const ALGO_CONFIG = {
     }
     return arr;
 }`,
-        run: runBubble,
+        run: runSelection,
     }
-}
-
-export const RUNNER_CONFIG = {
-    delay: 1000,
 }

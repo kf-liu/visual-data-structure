@@ -18,11 +18,11 @@ export default function Layout() {
                     icon: '',
                     label: '冒泡',
                 },
-                // {
-                //     key: '/main/sort/selection',
-                //     icon: '',
-                //     label: '选择',
-                // },
+                {
+                    key: '/main/sort/selection',
+                    icon: '',
+                    label: '选择',
+                },
             ],
         },
     ];
